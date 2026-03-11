@@ -10,7 +10,7 @@ export default async function handler(
   console.log("Fetching leaderboard...");
   try {
     const response = await fetch(
-      "http://127.0.0.1:8080/leaderboard",
+      "https://glenmark-game1-353748037778.asia-south1.run.app/leaderboard",
       {
         method: "GET",
         headers: {

@@ -9,7 +9,7 @@ export default async function handler(
   }
 
   try {
-    const response = await fetch("http://127.0.0.1:8080/update-score", {
+    const response = await fetch("https://glenmark-game1-353748037778.asia-south1.run.app/update-score", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

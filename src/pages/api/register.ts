@@ -10,7 +10,7 @@ export default async function handler(
 
   try {
     const response = await fetch(
-      "http://127.0.0.1:8080/register",
+      "https://glenmark-game1-353748037778.asia-south1.run.app/register",
       {
         method: "POST",
         headers: {
