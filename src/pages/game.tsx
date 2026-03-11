@@ -138,6 +138,11 @@ export default function Game() {
   // Handle drop
   const handleDrop = (e: React.DragEvent, productId: number) => {
     e.preventDefault();
+    processDrop(productId);
+  };
+
+  // Process drop logic (shared between drag and touch)
+  const processDrop = (productId: number) => {
     setDragOverProduct(null);
 
     if (!draggedDisease) return;
@@ -164,6 +169,73 @@ export default function Game() {
     setDraggedDisease(null);
   };
 
+  // Touch event handlers for TV touchscreens
+  const [touchOffset, setTouchOffset] = useState({ x: 0, y: 0 });
+  const [touchPosition, setTouchPosition] = useState({ x: 0, y: 0 });
+  const [isTouchDragging, setIsTouchDragging] = useState(false);
+
+  const handleTouchStart = (e: React.TouchEvent, disease: typeof allDiseases[0]) => {
+    const touch = e.touches[0];
+    const rect = (e.target as HTMLElement).getBoundingClientRect();
+    setTouchOffset({
+      x: touch.clientX - rect.left,
+      y: touch.clientY - rect.top,
+    });
+    setDraggedDisease(disease);
+    setIsTouchDragging(true);
+    setTouchPosition({ x: touch.clientX, y: touch.clientY });
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isTouchDragging) return;
+    const touch = e.touches[0];
+    setTouchPosition({ x: touch.clientX, y: touch.clientY });
+    
+    // Check if over a product
+    const products = document.querySelectorAll('[data-product-id]');
+    products.forEach((product) => {
+      const rect = product.getBoundingClientRect();
+      const productId = parseInt(product.getAttribute('data-product-id') || '0');
+      if (
+        touch.clientX >= rect.left &&
+        touch.clientX <= rect.right &&
+        touch.clientY >= rect.top &&
+        touch.clientY <= rect.bottom
+      ) {
+        setDragOverProduct(productId);
+      }
+    });
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!isTouchDragging) return;
+    setIsTouchDragging(false);
+    
+    const touch = e.changedTouches[0];
+    const products = document.querySelectorAll('[data-product-id]');
+    let droppedProductId: number | null = null;
+    
+    products.forEach((product) => {
+      const rect = product.getBoundingClientRect();
+      const productId = parseInt(product.getAttribute('data-product-id') || '0');
+      if (
+        touch.clientX >= rect.left &&
+        touch.clientX <= rect.right &&
+        touch.clientY >= rect.top &&
+        touch.clientY <= rect.bottom
+      ) {
+        droppedProductId = productId;
+      }
+    });
+    
+    if (droppedProductId !== null) {
+      processDrop(droppedProductId);
+    } else {
+      setDraggedDisease(null);
+      setDragOverProduct(null);
+    }
+  };
+
   return (
     <div className="min-h-screen  to-blue-600 flex flex-col">
       {/* Top Bar - Score and Timer */}
@@ -187,8 +259,11 @@ export default function Game() {
                 key={disease.id}
                 draggable
                 onDragStart={() => handleDragStart(disease)}
+                onTouchStart={(e) => handleTouchStart(e, disease)}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
                 className={`
-                4 cursor-movee rounded-lg shadow-lg
+                  w-40 h-24 cursor-move bg-white rounded-lg shadow-lg
                   transition-all duration-300 ease-out flex-shrink-0
                   ${matchedDiseases.includes(disease.id) ? 'opacity-0 scale-0' : 'opacity-100'}
                   ${returningDisease === disease.id ? 'animate-bounce' : ''}
@@ -219,11 +294,12 @@ export default function Game() {
             {products.map((product) => (
               <div
                 key={product.id}
+                data-product-id={product.id}
                 onDragOver={(e) => handleDragOver(e, product.id)}
                 onDragLeave={handleDragLeave}
                 onDrop={(e) => handleDrop(e, product.id)}
                 className={`
-                  
+                  relative
                   transition-all duration-200
                   ${dragOverProduct === product.id ? 'scale-110 ' : 'hover:scale-105'}
                 `}
