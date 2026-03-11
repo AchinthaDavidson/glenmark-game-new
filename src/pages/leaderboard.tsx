@@ -46,8 +46,8 @@ export default function Leaderboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-600 via-red-500 to-red-700 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full">
+    <div className="min-h-screen  flex items-center justify-center p-4">
+      <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-sm w-full">
         {/* Header */}
         <div className="text-center mb-8">
           {/* Logo */}
@@ -93,11 +93,11 @@ export default function Leaderboard() {
           <div className="mb-8">
             <div className="bg-red-50 rounded-xl overflow-hidden">
               {/* Table Header */}
-              <div className="grid grid-cols-12 gap-2 bg-red-600 text-white p-4 font-bold text-sm">
+              <div className="grid grid-cols-12 gap-2 bg-red-500 text-white p-3 font-bold text-sm">
                 <div className="col-span-2 text-center">Rank</div>
                 <div className="col-span-6">Doctor</div>
                 <div className="col-span-2 text-center">Score</div>
-                <div className="col-span-2 text-center">Status</div>
+                
               </div>
 
               {/* Scrollable Table Rows */}
@@ -134,17 +134,7 @@ export default function Leaderboard() {
                       </div>
 
                       {/* Status */}
-                      <div className="col-span-2 text-center">
-                        {entry.Completed ? (
-                          <span className="inline-block bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                            Done
-                          </span>
-                        ) : (
-                          <span className="inline-block bg-red-300 text-white text-xs px-2 py-1 rounded-full">
-                            Pending
-                          </span>
-                        )}
-                      </div>
+                      
                     </div>
                   ))
                 )}
@@ -157,14 +147,14 @@ export default function Leaderboard() {
         <div className="grid grid-cols-2 gap-4">
           <button
             onClick={handlePlayAgain}
-            className="bg-red-600 hover:bg-red-700 text-white font-bold text-lg py-4 px-8 rounded-xl transition-all duration-200 shadow-lg"
+            className="bg-red-600 hover:bg-red-700 text-white font-bold text-sm py-3 px-6 rounded-xl transition-all duration-200 shadow-lg"
           >
             Play Again
           </button>
           
           <button
             onClick={handleBack}
-            className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-lg py-4 px-8 rounded-xl transition-all duration-200"
+            className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-sm py-3 px-6 rounded-xl transition-all duration-200"
           >
             Main Menu
           </button>

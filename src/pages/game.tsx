@@ -50,7 +50,7 @@ export default function Game() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const correctSoundRef = useRef<HTMLAudioElement | null>(null);
   const wrongSoundRef = useRef<HTMLAudioElement | null>(null);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [timeLeft, setTimeLeft] = useState(3);
   const [correctCount, setCorrectCount] = useState(0);
   const [currentDiseases, setCurrentDiseases] = useState<typeof allDiseases>([]);
   const [remainingDiseases, setRemainingDiseases] = useState<typeof allDiseases>([]);
@@ -120,7 +120,7 @@ export default function Game() {
     if (timeLeft <= 0) {
       localStorage.setItem("gameScore", correctCount.toString());
       updateScore(correctCount, false).then(() => {
-        router.push("/game-over");
+        router.push("/win");
       });
       return;
     }
@@ -295,15 +295,33 @@ export default function Game() {
 
   return (
     <div className="min-h-screen  to-blue-600 flex flex-col">
-      {/* Top Bar - Score and Timer */}
+      {/* Top Bar - Score, Timer, and Stop Button */}
       <div className="bg-white shadow-lg px-6 py-4">
         <div className="flex justify-between items-center max-w-7xl mx-auto">
           <span className="text-red-600 text-2xl font-bold">
             Correct: {correctCount} / 12
           </span>
-          <span className="text-red-600 text-2xl font-bold">
-            TIME: {timeLeft}
-          </span>
+          
+          <div className="flex items-center gap-12">
+            <span className="text-red-600 text-2xl font-bold">
+              TIME: {timeLeft}
+            </span>
+            
+            {/* Stop Button */}
+            <button
+              onClick={() => router.push("/")}
+              className="p-2 border-2 border-red-600 rounded-lg hover:bg-red-100 transition-colors duration-200"
+              title="Exit Game"
+            >
+              <svg
+                className="w-6 h-6 text-red-600"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M6 6h12v12H6z" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
