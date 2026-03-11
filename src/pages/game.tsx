@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/router";
 
 // Disease data with image paths and correct product matches
@@ -47,6 +47,9 @@ function shuffleArray<T>(array: T[]): T[] {
 
 export default function Game() {
   const router = useRouter();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const correctSoundRef = useRef<HTMLAudioElement | null>(null);
+  const wrongSoundRef = useRef<HTMLAudioElement | null>(null);
   const [timeLeft, setTimeLeft] = useState(60);
   const [correctCount, setCorrectCount] = useState(0);
   const [currentDiseases, setCurrentDiseases] = useState<typeof allDiseases>([]);
@@ -56,11 +59,40 @@ export default function Game() {
   const [dragOverProduct, setDragOverProduct] = useState<number | null>(null);
   const [returningDisease, setReturningDisease] = useState<number | null>(null);
 
-  // Initialize game
+  // Initialize game and background music
   useEffect(() => {
     const shuffled = shuffleArray(allDiseases);
     setCurrentDiseases(shuffled.slice(0, 4));
     setRemainingDiseases(shuffled.slice(4));
+
+    // Start background music
+    audioRef.current = new Audio("/sound/Zambolino - Lighthouse (freetouse.com).mp3");
+    audioRef.current.loop = true;
+    audioRef.current.volume = 0.1;
+    audioRef.current.play().catch((error) => {
+      console.log("Audio autoplay blocked:", error);
+    });
+
+    // Initialize correct match sound
+    correctSoundRef.current = new Audio("/sound/3.mpeg");
+    correctSoundRef.current.volume = 0.4;
+
+    // Initialize wrong match sound
+    wrongSoundRef.current = new Audio("/sound/2.mpeg");
+    wrongSoundRef.current.volume = 0.4;
+
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+      if (correctSoundRef.current) {
+        correctSoundRef.current = null;
+      }
+      if (wrongSoundRef.current) {
+        wrongSoundRef.current = null;
+      }
+    };
   }, []);
 
   // Update score API call
@@ -152,6 +184,14 @@ export default function Game() {
       setCorrectCount((prev) => prev + 1);
       setMatchedDiseases((prev) => [...prev, draggedDisease.id]);
       
+      // Play correct match sound
+      if (correctSoundRef.current) {
+        correctSoundRef.current.currentTime = 0;
+        correctSoundRef.current.play().catch((error) => {
+          console.log("Sound play blocked:", error);
+        });
+      }
+      
       // Remove from current diseases
       const newCurrentDiseases = currentDiseases.filter(d => d.id !== draggedDisease.id);
       setCurrentDiseases(newCurrentDiseases);
@@ -161,8 +201,17 @@ export default function Game() {
         setTimeout(loadNextDiseases, 300);
       }
     } else {
-      // Wrong match - animate return
+      // Wrong match - animate return and play sound
       setReturningDisease(draggedDisease.id);
+      
+      // Play wrong match sound
+      if (wrongSoundRef.current) {
+        wrongSoundRef.current.currentTime = 0;
+        wrongSoundRef.current.play().catch((error) => {
+          console.log("Sound play blocked:", error);
+        });
+      }
+      
       setTimeout(() => setReturningDisease(null), 500);
     }
     
