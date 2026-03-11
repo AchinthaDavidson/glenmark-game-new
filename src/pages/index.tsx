@@ -50,8 +50,9 @@ export default function Home() {
       }
 
       if (response.ok) {
-        // Save SLMC_ID to localStorage for game use
+        // Save SLMC_ID and doctor name to localStorage for game use
         localStorage.setItem("SLMC_ID", slmcNo);
+        localStorage.setItem("doctorName", name);
         // Navigate to game instruction page
         router.push("/instructions");
       } else {

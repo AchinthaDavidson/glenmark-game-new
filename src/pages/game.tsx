@@ -47,7 +47,7 @@ function shuffleArray<T>(array: T[]): T[] {
 
 export default function Game() {
   const router = useRouter();
-  const [timeLeft, setTimeLeft] = useState(300);
+  const [timeLeft, setTimeLeft] = useState(60);
   const [correctCount, setCorrectCount] = useState(0);
   const [currentDiseases, setCurrentDiseases] = useState<typeof allDiseases>([]);
   const [remainingDiseases, setRemainingDiseases] = useState<typeof allDiseases>([]);
