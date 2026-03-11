@@ -29,19 +29,16 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(
-        "https://glenmark-game1-353748037778.asia-south1.run.app/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            DoctorName: name,
-            SLMC_ID: slmcNo,
-          }),
-        }
-      );
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          DoctorName: name,
+          SLMC_ID: slmcNo,
+        }),
+      });
 
       if (response.status === 400) {
         const data = await response.json();

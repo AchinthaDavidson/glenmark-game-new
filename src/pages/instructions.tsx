@@ -1,8 +1,25 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 export default function Instructions() {
   const router = useRouter();
+  const [countdown, setCountdown] = useState(20);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          router.push("/game");
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [router]);
 
   const handleStartGame = () => {
     router.push("/game");
@@ -11,56 +28,61 @@ export default function Instructions() {
   return (
     <div className="flex min-h-screen items-center justify-center">
       <main className="flex flex-col items-center justify-center w-full max-w-2xl px-8 py-12">
-        {/* Logo */}
-        <div className="mb-6">
-          <Image
-            src="/logo.png"
-            alt="Glenmark Logo"
-            width={80}
-            height={80}
-            priority
-          />
+        {/* Card Container */}
+        <div className="bg-white rounded-lg shadow-2xl p-10 w-full">
+          {/* Logo */}
+          <div className="mb-6 flex justify-center">
+            <Image
+              src="/logo.png"
+              alt="Glenmark Logo"
+              width={80}
+              height={80}
+              priority
+            />
+          </div>
+
+          {/* Welcome Message */}
+          <h1 className="text-4xl font-bold text-center mb-4">
+            <span className="text-black">Welcome, Doctor!</span>
+          </h1>
+
+          <p className="text-gray-700 text-center text-lg mb-2">
+            Thank you for joining the Glenmark Medical Challenge.
+          </p>
+
+          <p className="text-gray-700 text-center text-lg mb-8">
+            Select the appropriate therapy with the diagnosis.
+          </p>
+
+          {/* How to Play Section */}
+          <div className="w-full mb-8">
+            <h2 className="text-xl font-bold text-center text-gray-800 mb-6 italic tracking-wider">
+              HOW TO PLAY
+            </h2>
+
+            <div className="space-y-4 text-gray-700 text-lg">
+              <p>
+                <span className="font-semibold">01.</span> Drag the disease names and place them into the correct product basket.
+              </p>
+              <p>
+                <span className="font-semibold">02.</span> Complete the activity by matching all items correctly.
+              </p>
+            </div>
+          </div>
+
+          {/* Start Challenge Button */}
+          <button
+            onClick={handleStartGame}
+            className="w-full max-w-md bg-red-600 hover:bg-red-700 text-white font-bold text-2xl py-5 px-8 rounded transition-colors mb-6 mx-auto block"
+          >
+            START CHALLENGE
+          </button>
+
+          {/* Countdown */}
+          <p className="text-2xl font-bold text-gray-800 text-center">
+            STARTING IN {countdown}
+          </p>
         </div>
-
-        {/* Title */}
-        <h1 className="text-3xl font-bold text-center mb-8">
-          <span className="text-black">Game </span>
-          <span className="text-red-600">Instructions</span>
-        </h1>
-
-        {/* Instructions */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-lg p-8 shadow-lg mb-8 w-full">
-          <ul className="space-y-4 text-gray-700 text-lg">
-            <li className="flex items-start">
-              <span className="text-red-600 font-bold mr-2">1.</span>
-              <span>Match the diseases with their corresponding treatments</span>
-            </li>
-            <li className="flex items-start">
-              <span className="text-red-600 font-bold mr-2">2.</span>
-              <span>You have 60 seconds to complete the challenge</span>
-            </li>
-            <li className="flex items-start">
-              <span className="text-red-600 font-bold mr-2">3.</span>
-              <span>Each correct match earns you 10 points</span>
-            </li>
-            <li className="flex items-start">
-              <span className="text-red-600 font-bold mr-2">4.</span>
-              <span>Wrong matches will deduct 5 points</span>
-            </li>
-            <li className="flex items-start">
-              <span className="text-red-600 font-bold mr-2">5.</span>
-              <span>The player with the highest score wins!</span>
-            </li>
-          </ul>
-        </div>
-
-        {/* Start Game Button */}
-        <button
-          onClick={handleStartGame}
-          className="w-full max-w-xs bg-red-600 hover:bg-red-700 text-white font-bold text-xl py-4 px-8 rounded transition-colors"
-        >
-          Play Now
-        </button>
       </main>
     </div>
   );
