@@ -169,60 +169,63 @@ export default function Game() {
     setDraggedDisease(null);
   };
 
-  // Touch event handlers for TV touchscreens
-  const [touchOffset, setTouchOffset] = useState({ x: 0, y: 0 });
-  const [touchPosition, setTouchPosition] = useState({ x: 0, y: 0 });
-  const [isTouchDragging, setIsTouchDragging] = useState(false);
+  // Pointer event handlers for mouse/touch/pen (works on smart TV touchscreens)
+  const [pointerOffset, setPointerOffset] = useState({ x: 0, y: 0 });
+  const [isPointerDragging, setIsPointerDragging] = useState(false);
 
-  const handleTouchStart = (e: React.TouchEvent, disease: typeof allDiseases[0]) => {
-    const touch = e.touches[0];
+  const handlePointerDown = (e: React.PointerEvent, disease: typeof allDiseases[0]) => {
+    e.preventDefault();
     const rect = (e.target as HTMLElement).getBoundingClientRect();
-    setTouchOffset({
-      x: touch.clientX - rect.left,
-      y: touch.clientY - rect.top,
+    setPointerOffset({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
     });
     setDraggedDisease(disease);
-    setIsTouchDragging(true);
-    setTouchPosition({ x: touch.clientX, y: touch.clientY });
+    setIsPointerDragging(true);
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
   };
 
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isTouchDragging) return;
-    const touch = e.touches[0];
-    setTouchPosition({ x: touch.clientX, y: touch.clientY });
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!isPointerDragging || !draggedDisease) return;
+    e.preventDefault();
     
     // Check if over a product
-    const products = document.querySelectorAll('[data-product-id]');
-    products.forEach((product) => {
+    const productElements = document.querySelectorAll('[data-product-id]');
+    let foundProduct: number | null = null;
+    
+    productElements.forEach((product) => {
       const rect = product.getBoundingClientRect();
       const productId = parseInt(product.getAttribute('data-product-id') || '0');
       if (
-        touch.clientX >= rect.left &&
-        touch.clientX <= rect.right &&
-        touch.clientY >= rect.top &&
-        touch.clientY <= rect.bottom
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom
       ) {
-        setDragOverProduct(productId);
+        foundProduct = productId;
       }
     });
+    
+    setDragOverProduct(foundProduct);
   };
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (!isTouchDragging) return;
-    setIsTouchDragging(false);
+  const handlePointerUp = (e: React.PointerEvent) => {
+    if (!isPointerDragging) return;
+    e.preventDefault();
+    setIsPointerDragging(false);
+    (e.target as HTMLElement).releasePointerCapture(e.pointerId);
     
-    const touch = e.changedTouches[0];
-    const products = document.querySelectorAll('[data-product-id]');
+    const productElements = document.querySelectorAll('[data-product-id]');
     let droppedProductId: number | null = null;
     
-    products.forEach((product) => {
+    productElements.forEach((product) => {
       const rect = product.getBoundingClientRect();
       const productId = parseInt(product.getAttribute('data-product-id') || '0');
       if (
-        touch.clientX >= rect.left &&
-        touch.clientX <= rect.right &&
-        touch.clientY >= rect.top &&
-        touch.clientY <= rect.bottom
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom
       ) {
         droppedProductId = productId;
       }
@@ -259,11 +262,11 @@ export default function Game() {
                 key={disease.id}
                 draggable
                 onDragStart={() => handleDragStart(disease)}
-                onTouchStart={(e) => handleTouchStart(e, disease)}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleTouchEnd}
+                onPointerDown={(e) => handlePointerDown(e, disease)}
+                onPointerMove={handlePointerMove}
+                onPointerUp={handlePointerUp}
                 className={`
-                  w-40 h-24 cursor-move bg-white rounded-lg shadow-lg
+                  w-40 h-24 cursor-move bg-white rounded-lg shadow-lg touch-none
                   transition-all duration-300 ease-out flex-shrink-0
                   ${matchedDiseases.includes(disease.id) ? 'opacity-0 scale-0' : 'opacity-100'}
                   ${returningDisease === disease.id ? 'animate-bounce' : ''}
