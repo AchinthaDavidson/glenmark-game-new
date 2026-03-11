@@ -83,9 +83,9 @@ export default function Home() {
         {/* Title */}
         <h1 className="text-3xl font-bold text-center mb-2">
           <span className="text-black">Glenmark </span>
-          <span className="text-red-600">Medical</span>
+          
         </h1>
-        <h2 className="text-2xl font-bold text-red-600 mb-4">Challenge</h2>
+        <h2 className="text-2xl font-bold text-red-600 mb-4">Medical Challenge</h2>
 
         {/* Subtitle */}
         <p className="text-gray-500 text-center text-lg mb-10">
