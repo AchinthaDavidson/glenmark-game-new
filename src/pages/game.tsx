@@ -63,15 +63,41 @@ export default function Game() {
     setRemainingDiseases(shuffled.slice(4));
   }, []);
 
+  // Update score API call
+  const updateScore = async (score: number, completed: boolean) => {
+    try {
+      const slmcId = localStorage.getItem("SLMC_ID") || "UNKNOWN";
+      await fetch("/api/update-score", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          SLMC_ID: slmcId,
+          Score: score,
+          Completed: completed,
+        }),
+      });
+    } catch (error) {
+      console.error("Failed to update score:", error);
+    }
+  };
+
   // Game timer
   useEffect(() => {
     if (timeLeft <= 0) {
-      router.push("/game-over");
+      localStorage.setItem("gameScore", correctCount.toString());
+      updateScore(correctCount, false).then(() => {
+        router.push("/game-over");
+      });
       return;
     }
 
     if (correctCount >= 12) {
-      router.push("/win");
+      localStorage.setItem("gameScore", correctCount.toString());
+      updateScore(correctCount, true).then(() => {
+        router.push("/win");
+      });
       return;
     }
 
