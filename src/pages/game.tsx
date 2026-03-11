@@ -50,7 +50,7 @@ export default function Game() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const correctSoundRef = useRef<HTMLAudioElement | null>(null);
   const wrongSoundRef = useRef<HTMLAudioElement | null>(null);
-  const [timeLeft, setTimeLeft] = useState(3);
+  const [timeLeft, setTimeLeft] = useState(60);
   const [correctCount, setCorrectCount] = useState(0);
   const [currentDiseases, setCurrentDiseases] = useState<typeof allDiseases>([]);
   const [remainingDiseases, setRemainingDiseases] = useState<typeof allDiseases>([]);
