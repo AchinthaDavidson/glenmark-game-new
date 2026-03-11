@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 // Disease data with image paths and correct product matches
 const allDiseases = [
   // Canditral (Product 0)
-  { id: 1, name: "Onychomycosis", image: "/dieseses/1.1.png", productId: 0, width: 160, height: 96 },
+  { id: 1, name: "Onychomycosis", image: "/dieseses/1.1.png", productId: 0, width: 200, height: 96 },
   { id: 2, name: "Tinea capitis", image: "/dieseses/1.2.png", productId: 0, width: 160, height: 96 },
   { id: 3, name: "Tinea corporis", image: "/dieseses/1.3.png", productId: 0, width: 160, height: 96 },
   // Keto Plus (Product 4)
@@ -14,13 +14,13 @@ const allDiseases = [
   { id: 6, name: "Seborrheic dermatitis", image: "/dieseses/2.3.png", productId: 4, width: 160, height: 96 },
   // Deriva C (Product 2)
   { id: 7, name: "Comedonal acne", image: "/dieseses/3.1.png", productId: 2, width: 160, height: 96 },
-  { id: 8, name: "Inflammatory acne", image: "/dieseses/3.2.png", productId: 2, width: 160, height: 96 },
+  { id: 8, name: "Inflammatory acne", image: "/dieseses/3.2.png", productId: 2, width: 200, height: 96 },
   // Fisoativ (Product 3)
   { id: 9, name: "Xerosis", image: "/dieseses/4.1.png", productId: 3, width:160, height:96 },
-  { id: 10, name: "Adjuvant therapy in Eczema", image: "/dieseses/4.2.png", productId: 3, width:500, height: 96 },
+  { id: 10, name: "Adjuvant therapy in Eczema", image: "/dieseses/4.2.png", productId: 3, width:200, height: 96 },
   // Tacroz (Product 1)
-  { id: 11, name: "Atopic dermatitis", image: "/dieseses/5.1.png", productId: 1, width: 160, height: 96 },// 
-  { id: 12, name: "Steroid sparing agent", image: "/dieseses/5.2.png", productId: 1, width:160, height:96 },
+  { id: 11, name: "Atopic dermatitis", image: "/dieseses/5.1.png", productId: 1, width: 215, height: 96 },// 
+  { id: 12, name: "Steroid sparing agent", image: "/dieseses/5.2.png", productId: 1, width:180, height:96 },
   // Momate (Product 5)
   { id: 13, name: "Atopic dermatitis", image: "/dieseses/6.1.png", productId: 5, width: 160, height: 96 },
   { id: 14, name: "Psoriasis", image: "/dieseses/6.2.png", productId: 5, width: 160, height: 96 },
@@ -29,7 +29,7 @@ const allDiseases = [
 const products = [
   { id: 0, name: "Canditral", src: "/1x/0.png" },
   { id: 1, name: "Tacroz", src: "/1x/1.png" },
-  { id: 2, name: "Deriva-C", src: "/1x/2.png" },
+  { id: 2, name: "Deriva-C", src: "/1x/6.png" },
   { id: 3, name: "Fisoativ", src: "/1x/3.png" },
   { id: 4, name: "Keto Plus", src: "/1x/4.png" },
   { id: 5, name: "Momate", src: "/1x/5.png" },
