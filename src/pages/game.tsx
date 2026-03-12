@@ -19,7 +19,7 @@ const allDiseases = [
   { id: 9, name: "Xerosis", image: "/dieseses/4.1.png", productId: 3, width:160, height:96 },
   // { id: 10, name: "Adjuvant therapy in Eczema", image: "/dieseses/4.2.png", productId: 1, width:200, height: 96 },
   // Tacroz (Product 1)
-  { id: 11, name: "Atopic dermatitis", image: "/dieseses/5.1.png", productId: 1, width: 215, height: 96 },// 
+  { id: 11, name: "Atopic dermatitis", image: "/dieseses/5.1.png", productId: 3, width: 215, height: 96 },// 
   { id: 12, name: "Steroid sparing agent", image: "/dieseses/5.2.png", productId: 1, width:180, height:96 },
   // Momate (Product 5)
   { id: 13, name: "Atopic dermatitis", image: "/dieseses/6.1.png", productId: 5, width: 160, height: 96 },

@@ -27,11 +27,14 @@ export default function Leaderboard() {
       }
       const data = await response.json();
 
-      await setLeaderboard(data.leaderboard);
+      // Handle both array response and object with leaderboard property
+      const leaderboardData = Array.isArray(data) ? data : data.leaderboard || [];
+      setLeaderboard(leaderboardData);
 
-      console.log("Leaderboard entries:", leaderboard);
+      console.log("Leaderboard entries:", leaderboardData);
     } catch (err) {
       setError("Failed to load leaderboard. Please try again.");
+      setLeaderboard([]);
     } finally {
       setLoading(false);
     }

@@ -10,6 +10,11 @@ export default async function handler(
   }
 
   try {
+    // Check if Supabase is configured
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY) {
+      return res.status(500).json({ message: "Supabase not configured" });
+    }
+
     // Fetch top 10 doctors ordered by score (descending)
     const { data: leaderboard, error } = await supabase
       .from("Doctors")
@@ -21,9 +26,10 @@ export default async function handler(
       throw error;
     }
 
-    return res.status(200).json(leaderboard);
+    return res.status(200).json(leaderboard || []);
   } catch (error) {
     console.error("Error fetching leaderboard:", error);
-    return res.status(500).json({ message: "Failed to fetch leaderboard" });
+    // Return empty array instead of error to prevent UI crash
+    return res.status(200).json([]);
   }
 }
