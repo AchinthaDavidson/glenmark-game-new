@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { supabase } from "@/lib/supabase";
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,17 +10,28 @@ export default async function handler(
   }
 
   try {
-    const response = await fetch("https://glenmark-game1-353748037778.asia-south1.run.app/update-score", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(req.body),
-    });
+    const { SLMC_ID, Score, Completed } = req.body;
 
-    const data = await response.json();
-    return res.status(response.status).json(data);
+    if (!SLMC_ID) {
+      return res.status(400).json({ message: "SLMC_ID is required" });
+    }
+
+    // Update doctor's score and completion status
+    const { error: updateError } = await supabase
+      .from("Doctors")
+      .update({
+        Score: Score,
+        Completed: Completed,
+      })
+      .eq("SLMC_ID", SLMC_ID);
+
+    if (updateError) {
+      throw updateError;
+    }
+
+    return res.status(200).json({ message: "Score updated successfully" });
   } catch (error) {
+    console.error("Update score error:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 }

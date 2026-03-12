@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { supabase } from "@/lib/supabase";
 
 export default async function handler(
   req: NextApiRequest,
@@ -7,25 +8,20 @@ export default async function handler(
   if (req.method !== "GET") {
     return res.status(405).json({ message: "Method not allowed" });
   }
-  console.log("Fetching leaderboard...");
-  try {
-    const response = await fetch(
-      "https://glenmark-game1-353748037778.asia-south1.run.app/leaderboard",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch leaderboard");
+  try {
+    // Fetch top 10 doctors ordered by score (descending)
+    const { data: leaderboard, error } = await supabase
+      .from("Doctors")
+      .select("DoctorName, SLMC_ID, Score, Completed")
+      .order("Score", { ascending: false })
+      .limit(10);
+
+    if (error) {
+      throw error;
     }
-    console.log("Leaderboard fetched successfully");
-    const data = await response.json();
-    console.log("Sending leaderboard data:", data);
-    return res.status(200).json(data);
+
+    return res.status(200).json(leaderboard);
   } catch (error) {
     console.error("Error fetching leaderboard:", error);
     return res.status(500).json({ message: "Failed to fetch leaderboard" });
